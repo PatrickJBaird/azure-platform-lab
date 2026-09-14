@@ -36,7 +36,7 @@ resource "azurerm_linux_virtual_machine" "main" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII8h+gTxv3tbNK7QdIya6OL4TEWvizgrQX0zRTcR8Wde terraform-lab"
+    public_key = file(var.ssh_public_key_path)
   }
 
   os_disk {
