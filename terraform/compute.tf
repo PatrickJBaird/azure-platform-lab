@@ -14,7 +14,7 @@ resource "azurerm_network_interface" "main" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.snet-main.id
+    subnet_id                     = azurerm_subnet.lab.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.main.id
   }
@@ -36,7 +36,7 @@ resource "azurerm_linux_virtual_machine" "main" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = "AAAAC3NzaC1lZDI1NTE5AAAAII8h+gTxv3tbNK7QdIya6OL4TEWvizgrQX0zRTcR8Wde"
+    public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII8h+gTxv3tbNK7QdIya6OL4TEWvizgrQX0zRTcR8Wde terraform-lab"
   }
 
   os_disk {
