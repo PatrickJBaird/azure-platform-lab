@@ -34,3 +34,36 @@ Ansible configures:
 - Ansible
 - Git
 - WSL2 Ubuntu
+
+##Architecture Diagram
+
+Git Repository
+        │
+        ▼
+Terraform
+        │
+        ▼
+Azure Blob Storage
+(Remote State)
+        │
+        ▼
+Resource Group
+        │
+        ▼
+Virtual Network
+        │
+        ▼
+Subnet
+        │
+        ▼
+Network Security Group
+        │
+        ▼
+Ubuntu VM
+      ┌─┴─┐
+      │   │
+      ▼   ▼
+ Ansible  Browser
+      │
+      ▼
+    NGINX
