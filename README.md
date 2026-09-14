@@ -1,29 +1,36 @@
-# Azure Terraform & Ansible Lab
+# Azure Platform Lab
 
 ## Overview
 
-This project demonstrates and Documents:
+This project demonstrates:
 
-- Azure Infrastructure as Code
-- Terraform modules
-- Azure DevOps CI/CD
-- Ansible Configuration Management
-- Automated VM provisioning
+- Infrastructure as Code with Terraform
+- Azure networking and security
+- Linux virtual machine deployment
+- Remote Terraform state in Azure Blob Storage
+- Configuration management with Ansible
+- NGINX deployment automation
 
 ## Architecture
 
-Terraform:
+Terraform provisions:
+
 - Resource Group
 - Virtual Network
-- Linux VM
+- Subnet
+- Network Security Group
+- Public IP
+- Ubuntu VM
 
-Ansible:
-- NGINX deployment
-- Security hardening
-- System updates
+Ansible configures:
 
-## Deployment
+- NGINX
+- Linux package management
 
-terraform init
-terraform plan
-terraform apply
+## Technologies
+
+- Azure
+- Terraform
+- Ansible
+- Git
+- WSL2 Ubuntu
