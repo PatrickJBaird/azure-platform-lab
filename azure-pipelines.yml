@@ -8,7 +8,6 @@ steps:
 
 - script: |
     mkdir tools
-
     cd tools
 
     wget https://releases.hashicorp.com/terraform/1.13.2/terraform_1.13.2_linux_amd64.zip
@@ -19,3 +18,9 @@ steps:
 
     ./terraform version
   displayName: 'Download and Verify Terraform'
+
+- script: |
+    cd tools
+
+    ./terraform fmt -check -recursive ../terraform
+  displayName: 'Terraform Format Check'
