@@ -208,3 +208,7 @@ stages:
                 --private-key $(sshKey.secureFilePath) \
                 playbooks/nginx.yml
             displayName: 'Run Ansible Playbook'
+
+          - script: |
+              curl http://52.187.230.185
+            displayName: 'Verify NGINX'
