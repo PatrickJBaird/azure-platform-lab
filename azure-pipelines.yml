@@ -32,3 +32,12 @@ steps:
 
     ../tools/terraform validate
   displayName: 'Terraform Validate'
+
+- task: AzureCLI@2
+  displayName: 'Verify Azure Connection'
+  inputs:
+    azureSubscription: 'sc-azure-platform-lab'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az account show
