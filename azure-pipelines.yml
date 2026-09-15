@@ -62,6 +62,8 @@ steps:
       echo "Length: ${#TF_VAR_ssh_public_key}"
     fi
   displayName: 'Verify Terraform Variable'
+  env:
+    TF_VAR_ssh_public_key: $(TF_VAR_ssh_public_key)
 
 - task: AzureCLI@2
   displayName: 'Terraform Plan'
