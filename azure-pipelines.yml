@@ -8,14 +8,17 @@ steps:
 
 - script: |
     echo "Azure DevOps Pipeline Running"
+    echo "Current directory:"
     pwd
+    echo ""
+    echo "Repository contents:"
     ls -la
-  displayName: 'Test Pipeline'
+  displayName: 'Verify Pipeline'
 
 - script: |
     git --version
-  displayName: 'Check Git'
+  displayName: 'Verify Git'
 
 - script: |
     curl --version
-  displayName: 'Check Curl'
+  displayName: 'Verify Curl'
