@@ -52,3 +52,14 @@ steps:
       cd terraform
 
       ../tools/terraform init
+
+- task: AzureCLI@2
+  displayName: 'Terraform Plan'
+  inputs:
+    azureSubscription: 'sc-azure-platform-lab'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      cd terraform
+
+      ../tools/terraform plan -input=false
