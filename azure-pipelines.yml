@@ -41,3 +41,14 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       az account show
+
+- task: AzureCLI@2
+  displayName: 'Terraform Init'
+  inputs:
+    azureSubscription: 'sc-azure-platform-lab'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      cd terraform
+
+      ../tools/terraform init
