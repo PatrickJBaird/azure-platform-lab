@@ -67,6 +67,9 @@ steps:
 
 - task: AzureCLI@2
   displayName: 'Terraform Plan'
+  env:
+    TF_VAR_ssh_public_key: $(TF_VAR_ssh_public_key)
+
   inputs:
     azureSubscription: 'sc-azure-platform-lab'
     scriptType: bash
