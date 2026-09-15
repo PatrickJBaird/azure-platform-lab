@@ -135,6 +135,19 @@ stages:
                 ../tools/terraform init
 
                 ../tools/terraform apply -auto-approve -input=false
+          - task: AzureCLI@2
+            displayName: 'Get Terraform Outputs'
+            env:
+              TF_VAR_ssh_public_key: $(TF_VAR_ssh_public_key)
+
+            inputs:
+              azureSubscription: 'sc-azure-platform-lab'
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                cd terraform
+
+                ../tools/terraform output
 
           - script: |
                 sudo apt-get update
