@@ -9,11 +9,7 @@ steps:
 - script: |
     wget https://releases.hashicorp.com/terraform/1.13.2/terraform_1.13.2_linux_amd64.zip
 
-    echo "Download Complete"
-
     unzip -o terraform_1.13.2_linux_amd64.zip
 
-    echo "Unzip Complete"
-
-    ls -la
-  displayName: 'Download Terraform'
+    ./terraform version
+  displayName: 'Download and Verify Terraform'
