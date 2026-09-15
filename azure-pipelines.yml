@@ -1,80 +1,137 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
+stages:
 
-steps:
+- stage: ValidateAndPlan
+  displayName: 'Validate and Plan'
 
-- script: |
-    mkdir tools
-    cd tools
+  jobs:
 
-    wget https://releases.hashicorp.com/terraform/1.13.2/terraform_1.13.2_linux_amd64.zip
+  - job: TerraformPlan
+    displayName: 'Terraform Plan'
 
-    unzip -o terraform_1.13.2_linux_amd64.zip
+    pool:
+      vmImage: ubuntu-latest
 
-    chmod +x terraform
+    steps:
 
-    ./terraform version
-  displayName: 'Download and Verify Terraform'
+    - script: |
+        mkdir -p tools
+        cd tools
 
-- script: |
-    cd tools
+        wget https://releases.hashicorp.com/terraform/1.13.2/terraform_1.13.2_linux_amd64.zip
 
-    ./terraform fmt -check -recursive ../terraform
-  displayName: 'Terraform Format Check'
+        unzip -o terraform_1.13.2_linux_amd64.zip
 
-- script: |
-    cd terraform
+        chmod +x terraform
 
-    ../tools/terraform init -backend=false
+        ./terraform version
+      displayName: 'Download and Verify Terraform'
 
-    ../tools/terraform validate
-  displayName: 'Terraform Validate'
+    - script: |
+        cd tools
 
-- task: AzureCLI@2
-  displayName: 'Verify Azure Connection'
-  inputs:
-    azureSubscription: 'sc-azure-platform-lab'
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      az account show
+        ./terraform fmt -check -recursive ../terraform
+      displayName: 'Terraform Format Check'
 
-- task: AzureCLI@2
-  displayName: 'Terraform Init'
-  inputs:
-    azureSubscription: 'sc-azure-platform-lab'
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      cd terraform
+    - script: |
+        cd terraform
 
-      ../tools/terraform init
+        ../tools/terraform init -backend=false
 
-- script: |
-    if [ -z "$TF_VAR_ssh_public_key" ]; then
-      echo "Variable NOT found"
-      exit 1
-    else
-      echo "Variable found"
-      echo "Length: ${#TF_VAR_ssh_public_key}"
-    fi
-  displayName: 'Verify Terraform Variable'
-  env:
-    TF_VAR_ssh_public_key: $(TF_VAR_ssh_public_key)
+        ../tools/terraform validate
+      displayName: 'Terraform Validate'
 
-- task: AzureCLI@2
-  displayName: 'Terraform Plan'
-  env:
-    TF_VAR_ssh_public_key: $(TF_VAR_ssh_public_key)
+    - task: AzureCLI@2
+      displayName: 'Verify Azure Connection'
+      inputs:
+        azureSubscription: 'sc-azure-platform-lab'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az account show
 
-  inputs:
-    azureSubscription: 'sc-azure-platform-lab'
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      cd terraform
+    - task: AzureCLI@2
+      displayName: 'Terraform Init'
+      inputs:
+        azureSubscription: 'sc-azure-platform-lab'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          cd terraform
 
-      ../tools/terraform plan -input=false
+          ../tools/terraform init
+
+    - script: |
+        if [ -z "$TF_VAR_ssh_public_key" ]; then
+          echo "Variable NOT found"
+          exit 1
+        else
+          echo "Variable found"
+          echo "Length: ${#TF_VAR_ssh_public_key}"
+        fi
+      displayName: 'Verify Terraform Variable'
+      env:
+        TF_VAR_ssh_public_key: $(TF_VAR_ssh_public_key)
+
+    - task: AzureCLI@2
+      displayName: 'Terraform Plan'
+      env:
+        TF_VAR_ssh_public_key: $(TF_VAR_ssh_public_key)
+
+      inputs:
+        azureSubscription: 'sc-azure-platform-lab'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          cd terraform
+
+          ../tools/terraform plan -input=false
+
+- stage: Apply
+  displayName: 'Terraform Apply'
+
+  dependsOn: ValidateAndPlan
+
+  jobs:
+
+  - deployment: TerraformApply
+    displayName: 'Apply Terraform'
+
+    environment: terraform-lab
+
+    strategy:
+      runOnce:
+        deploy:
+
+          steps:
+
+          - checkout: self
+
+          - script: |
+              mkdir -p tools
+              cd tools
+
+              wget https://releases.hashicorp.com/terraform/1.13.2/terraform_1.13.2_linux_amd64.zip
+
+              unzip -o terraform_1.13.2_linux_amd64.zip
+
+              chmod +x terraform
+            displayName: 'Download Terraform'
+
+          - task: AzureCLI@2
+            displayName: 'Terraform Apply'
+            env:
+              TF_VAR_ssh_public_key: $(TF_VAR_ssh_public_key)
+
+            inputs:
+              azureSubscription: 'sc-azure-platform-lab'
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                cd terraform
+
+                ../tools/terraform init
+
+                ../tools/terraform apply -auto-approve -input=false
