@@ -1,0 +1,211 @@
+LESSONS LEARNED AND TROUBLESHOOTING
+
+OVERVIEW
+
+Throughout the project, several real-world issues were encountered across Git, Terraform, Azure, Azure DevOps, and Ansible. Resolving these challenges provided valuable experience in Infrastructure as Code, CI/CD pipelines, cloud authentication, state management, and automation troubleshooting.
+
+GIT REPOSITORY RECOVERY
+
+Issue:
+After restoring from a backup copy of the repository, GitHub was not showing the latest README updates despite changes being visible locally.
+
+Root Cause:
+The Git remote had been changed to a local filesystem path during repository recovery.
+
+Resolution:
+Verified remotes using git remote -v and reconfigured the remote to point back to GitHub.
+
+Lesson Learned:
+Always verify Git remotes following repository recovery operations.
+
+LOCAL BRANCH LOSS AFTER REPOSITORY RECOVERY
+
+Issue:
+Feature branches disappeared after restoring the repository backup.
+
+Root Cause:
+Only the main branch existed on the remote. Local feature branches had not been pushed prior to the restore operation.
+
+Resolution:
+Confirmed completed work existed on main and continued development from there.
+
+Lesson Learned:
+Push feature branches regularly using:
+ git push -u origin feature/branch-name
+
+WINDOWS LOCKING GIT OBJECTS
+
+Issue:
+Git reported deletion failures within .git/objects during pull operations.
+
+Root Cause:
+Temporary file locking by Windows, OneDrive, VS Code, or antivirus processes.
+
+Resolution:
+Retrying the operation resolved the issue.
+
+Lesson Learned:
+Not all Git object errors indicate corruption. Windows file locks are a common cause of transient Git issues.
+
+AZURE DEVOPS HOSTED AGENT QUEUE DELAYS
+
+Issue:
+Initial pipeline execution remained queued for an extended period.
+
+Root Cause:
+Microsoft-hosted agent allocation delays.
+
+Resolution:
+Waited for hosted capacity to become available.
+
+Lesson Learned:
+The first build often takes longer due to hosted agent allocation.
+
+TERRAFORM EXTENSION MISSING
+
+Issue:
+Azure DevOps reported a missing TerraformInstaller task.
+
+Root Cause:
+Terraform extension not installed.
+
+Resolution:
+Downloaded Terraform directly during pipeline execution.
+
+Lesson Learned:
+Avoid unnecessary dependencies on marketplace extensions where native tooling can achieve the same result.
+
+TERRAFORM BINARY NAMING CONFLICT
+
+Issue:
+Pipeline failed with './terraform: Is a directory'.
+
+Root Cause:
+The repository already contained a terraform directory.
+
+Resolution:
+Created a dedicated tools directory for pipeline binaries.
+
+Lesson Learned:
+Separate tooling from source code to avoid naming conflicts.
+
+AZURE SERVICE CONNECTION AUTHENTICATION
+
+Issue:
+Terraform required Azure authentication within Azure DevOps.
+
+Resolution:
+Created an Azure Resource Manager service connection using App Registration authentication.
+
+Lesson Learned:
+CI/CD pipelines should use dedicated application identities rather than personal user accounts.
+
+TERRAFORM VARIABLE AND LOCAL FILE DEPENDENCY
+
+Issue:
+Terraform Plan failed because ssh_public_key_path was not available on hosted build agents.
+
+Root Cause:
+Terraform referenced a Windows file path that existed only on the local workstation.
+
+Resolution:
+Replaced the file path approach with a Terraform variable and pipeline secret.
+
+Lesson Learned:
+Infrastructure code should avoid dependencies on local workstation files.
+
+PIPELINE VARIABLE PROPAGATION
+
+Issue:
+Terraform could not see configured pipeline variables.
+
+Root Cause:
+Variables were not automatically available in the runtime environment.
+
+Resolution:
+Explicitly passed variables through the env: block.
+
+Lesson Learned:
+Always validate that pipeline variables are reaching downstream processes.
+
+TERRAFORM STATE LOCKING
+
+Issue:
+Terraform reported that the state blob was already locked.
+
+Root Cause:
+A stale lock remained after a previous Terraform operation.
+
+Resolution:
+Verified no active executions existed and released the lock using terraform force-unlock.
+
+Lesson Learned:
+State locking protects infrastructure from concurrent modification and should not be disabled casually.
+
+MULTI-STAGE PIPELINE CONVERSION
+
+Issue:
+Azure DevOps reported 'Unexpected property stage'.
+
+Root Cause:
+A stage definition was inserted into a single-stage pipeline.
+
+Resolution:
+Refactored the pipeline into a proper multi-stage YAML structure.
+
+Lesson Learned:
+Azure DevOps requires stages to be defined at the root level of the pipeline.
+
+DYNAMIC INVENTORY GENERATION
+
+Issue:
+Ansible depended on a static inventory file containing a manually maintained IP address.
+
+Resolution:
+Generated inventory dynamically from Terraform outputs.
+
+Lesson Learned:
+Infrastructure outputs should drive downstream automation wherever possible.
+
+AZURE DEVOPS SECURE FILE INTEGRATION
+
+Issue:
+Ansible required an SSH private key that could not be stored in Git.
+
+Resolution:
+Uploaded the key to Azure DevOps Secure Files and downloaded it during pipeline execution.
+
+Lesson Learned:
+Secrets and private keys should be managed using dedicated secure storage mechanisms.
+
+ANSIBLE CONNECTIVITY VALIDATION
+
+Issue:
+Needed to verify Azure DevOps could communicate with the VM before running playbooks.
+
+Resolution:
+Executed an Ansible ping test and received a successful pong response.
+
+Lesson Learned:
+Validate connectivity independently before introducing configuration management tasks.
+
+FINAL END-TO-END AUTOMATION SUCCESS
+
+Outcome:
+Successfully implemented:
+
+GitHub
+ -> Azure DevOps
+ -> Terraform Validate
+ -> Terraform Plan
+ -> Manual Approval
+ -> Terraform Apply
+ -> Terraform Outputs
+ -> Dynamic Inventory
+ -> Secure SSH Key
+ -> Ansible
+ -> NGINX Deployment
+ -> NGINX Validation
+
+Key Takeaway:
+The project evolved from a simple Terraform deployment exercise into a complete Platform Engineering workflow demonstrating Infrastructure as Code, Remote State Management, CI/CD, Deployment Governance, Configuration Management, Secure Secret Handling, Dynamic Infrastructure Discovery, and End-to-End Automation.

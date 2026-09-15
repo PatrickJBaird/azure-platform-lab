@@ -1,71 +1,79 @@
-# Azure Platform Lab
-
-Built an end-to-end Azure Infrastructure-as-Code platform using Terraform, Azure Blob Remote State, Ansible, GitHub, and Azure DevOps. Implemented CI/CD pipelines with Terraform validation, planning, manual approval gates, and automated deployments into Azure.
-
+# Azure Platform Engineering Lab
 ## Overview
 
-This project demonstrates:
+This project demonstrates the design, deployment, and automation of a Microsoft Azure platform using Infrastructure as Code (Terraform), Configuration Management (Ansible), and CI/CD (Azure DevOps).
 
-- Infrastructure as Code with Terraform
-- Azure networking and security
-- Linux virtual machine deployment
-- Remote Terraform state in Azure Blob Storage
-- Configuration management with Ansible
-- NGINX deployment automation
+The solution provisions Azure infrastructure using Terraform, stores state remotely in Azure Blob Storage, deploys and configures a Linux VM, and automates validation, planning, approval, deployment, and configuration management through Azure DevOps pipelines.
 
-## Architecture
+The end result is a fully automated Infrastructure and Configuration as Code workflow.
 
-Terraform provisions:
+## Solution Architecture
 
-- Resource Group
-- Virtual Network
-- Subnet
-- Network Security Group
-- Public IP
-- Ubuntu VM
+```mermaid
+flowchart TD
+    A[GitHub] --> B[Azure DevOps Pipeline]
 
-Ansible configures:
+    B --> C[Terraform Format Check]
+    C --> D[Terraform Validate]
+    D --> E[Terraform Plan]
+    E --> F[Manual Approval]
+    F --> G[Terraform Apply]
 
-- NGINX
-- Linux package management
+    G --> H[Azure Infrastructure]
+    H --> I[Terraform Outputs]
+    I --> J[Dynamic Inventory]
 
-## Technologies
+    J --> K[Ansible Playbook]
+    K --> L[NGINX Deployment]
+    L --> M[NGINX Validation]
+```
 
-- Azure
-- Terraform
-- Ansible
-- Git
-- WSL2 Ubuntu
+##Key Learning Outcomes
 
-##Architecture Diagram
+This project demonstrates practical experience with:
 
-Git Repository
-        │
-        ▼
-Terraform
-        │
-        ▼
-Azure Blob Storage
-(Remote State)
-        │
-        ▼
-Resource Group
-        │
-        ▼
-Virtual Network
-        │
-        ▼
-Subnet
-        │
-        ▼
-Network Security Group
-        │
-        ▼
-Ubuntu VM
-      ┌─┴─┐
-      │   │
-      ▼   ▼
- Ansible  Browser
-      │
-      ▼
-    NGINX
+-Infrastructure as Code
+-Azure Networking
+-Linux Administration
+-Terraform State Management
+-Terraform CI/CD Pipelines
+-Azure DevOps Service Connections
+-Deployment Approval Gates
+-Dynamic Inventory Management
+-Ansible Automation
+-End-to-End Platform Engineering Workflows
+-Future Enhancements
+
+Potential future improvements include:
+
+-DNS integration
+-HTTPS with Let's Encrypt
+-Azure Key Vault integration
+-Monitoring with Azure Monitor
+-Log Analytics integration
+-Multi-environment deployments (Dev/Test/Prod)
+-Self-hosted Azure DevOps agents
+-Blue/Green deployment strategies
+
+## Project Milestones
+
+### v1.0-terraform-cicd
+
+-Terraform CI/CD pipeline
+-Remote state management
+-Approval gates
+-Automated Terraform deployments
+
+### v1.2-end-to-end-automation
+
+-Dynamic inventory generation
+-Secure SSH key management
+-Ansible automation
+-Automated NGINX deployment
+-End-to-end platform automation
+
+# Author
+
+## Patrick Baird
+
+### Azure • Terraform • Automation • Infrastructure Engineering • Platform Engineering
