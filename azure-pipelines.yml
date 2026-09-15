@@ -53,6 +53,16 @@ steps:
 
       ../tools/terraform init
 
+- script: |
+    if [ -z "$TF_VAR_ssh_public_key" ]; then
+      echo "Variable NOT found"
+      exit 1
+    else
+      echo "Variable found"
+      echo "Length: ${#TF_VAR_ssh_public_key}"
+    fi
+  displayName: 'Verify Terraform Variable'
+
 - task: AzureCLI@2
   displayName: 'Terraform Plan'
   inputs:
