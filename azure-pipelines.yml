@@ -24,3 +24,11 @@ steps:
 
     ./terraform fmt -check -recursive ../terraform
   displayName: 'Terraform Format Check'
+
+- script: |
+    cd terraform
+
+    ../tools/terraform init -backend=false
+
+    ../tools/terraform validate
+  displayName: 'Terraform Validate'
