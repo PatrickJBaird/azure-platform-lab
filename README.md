@@ -1,5 +1,7 @@
 # Azure Platform Lab
 
+Built an end-to-end Azure Infrastructure-as-Code platform using Terraform, Azure Blob Remote State, Ansible, GitHub, and Azure DevOps. Implemented CI/CD pipelines with Terraform validation, planning, manual approval gates, and automated deployments into Azure.
+
 ## Overview
 
 This project demonstrates:
