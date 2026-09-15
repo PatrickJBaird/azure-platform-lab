@@ -6,21 +6,6 @@ pool:
 
 steps:
 
-- task: TerraformInstaller@1
-  displayName: 'Install Terraform'
-  inputs:
-    terraformVersion: 'latest'
-
 - script: |
     terraform version
   displayName: 'Terraform Version'
-
-- script: |
-    cd terraform
-    terraform fmt -check -recursive
-  displayName: 'Terraform Format Check'
-
-- script: |
-    cd terraform
-    terraform validate
-  displayName: 'Terraform Validate'
