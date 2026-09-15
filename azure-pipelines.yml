@@ -148,7 +148,7 @@ stages:
                 cd terraform
 
                 ../tools/terraform output
-                
+
           - task: AzureCLI@2
             displayName: 'Generate Dynamic Inventory'
             env:
@@ -176,3 +176,15 @@ stages:
 
                 ansible --version
             displayName: 'Install and Verify Ansible'
+
+          - task: DownloadSecureFile@1
+            name: sshKey
+            displayName: 'Download SSH Private Key'
+            inputs:
+              secureFile: 'id_ed25519'
+
+          - script: |
+              chmod 600 $(sshKey.secureFilePath)
+
+              ls -l $(sshKey.secureFilePath)
+            displayName: 'Prepare SSH Key'
