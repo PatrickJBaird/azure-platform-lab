@@ -28,7 +28,7 @@ flowchart TD
     L --> M[NGINX Validation]
 ```
 
-##Key Learning Outcomes
+## Key Learning Outcomes
 
 This project demonstrates practical experience with:
 
