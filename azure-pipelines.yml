@@ -1,0 +1,21 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+- script: |
+    echo "Azure DevOps Pipeline Running"
+    pwd
+    ls -la
+  displayName: 'Test Pipeline'
+
+- script: |
+    git --version
+  displayName: 'Check Git'
+
+- script: |
+    curl --version
+  displayName: 'Check Curl'
