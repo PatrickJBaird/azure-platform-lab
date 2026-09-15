@@ -148,6 +148,26 @@ stages:
                 cd terraform
 
                 ../tools/terraform output
+                
+          - task: AzureCLI@2
+            displayName: 'Generate Dynamic Inventory'
+            env:
+              TF_VAR_ssh_public_key: $(TF_VAR_ssh_public_key)
+
+            inputs:
+              azureSubscription: 'sc-azure-platform-lab'
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                cd terraform
+
+                VM_IP=$(../tools/terraform output -raw vm_public_ip)
+
+                echo "[web]" > ../ansible/inventory.ini
+                echo "$VM_IP ansible_user=azureuser" >> ../ansible/inventory.ini
+
+                echo "Generated inventory:"
+                cat ../ansible/inventory.ini
 
           - script: |
                 sudo apt-get update
