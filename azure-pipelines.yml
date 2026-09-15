@@ -142,4 +142,4 @@ stages:
                 sudo apt-get install -y ansible
 
                 ansible --version
-                displayName: 'Install and Verify Ansible'
+            displayName: 'Install and Verify Ansible'
