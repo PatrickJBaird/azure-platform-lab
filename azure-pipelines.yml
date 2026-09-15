@@ -188,3 +188,13 @@ stages:
 
               ls -l $(sshKey.secureFilePath)
             displayName: 'Prepare SSH Key'
+            
+          - script: |
+              cd ansible
+
+              ansible web \
+                -i inventory.ini \
+                -u azureuser \
+                --private-key $(sshKey.secureFilePath) \
+                -m ping
+            displayName: 'Ansible Connectivity Test'
