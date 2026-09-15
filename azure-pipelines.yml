@@ -135,3 +135,10 @@ stages:
                 ../tools/terraform init
 
                 ../tools/terraform apply -auto-approve -input=false
+- script: |
+    sudo apt-get update
+
+    sudo apt-get install -y ansible
+
+    ansible --version
+  displayName: 'Install and Verify Ansible'
