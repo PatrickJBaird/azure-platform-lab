@@ -6,19 +6,21 @@ pool:
 
 steps:
 
-- script: |
-    echo "Azure DevOps Pipeline Running"
-    echo "Current directory:"
-    pwd
-    echo ""
-    echo "Repository contents:"
-    ls -la
-  displayName: 'Verify Pipeline'
+- task: TerraformInstaller@1
+  displayName: 'Install Terraform'
+  inputs:
+    terraformVersion: 'latest'
 
 - script: |
-    git --version
-  displayName: 'Verify Git'
+    terraform version
+  displayName: 'Terraform Version'
 
 - script: |
-    curl --version
-  displayName: 'Verify Curl'
+    cd terraform
+    terraform fmt -check -recursive
+  displayName: 'Terraform Format Check'
+
+- script: |
+    cd terraform
+    terraform validate
+  displayName: 'Terraform Validate'
