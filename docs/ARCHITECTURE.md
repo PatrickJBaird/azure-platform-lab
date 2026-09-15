@@ -57,18 +57,3 @@ This removes hardcoded infrastructure dependencies.
 
 ### Secure File Storage
 SSH private keys are stored in Azure DevOps Secure Files rather than source control.
-
-## Screenshot Locations
-Add screenshots to:
-
-```text
-/docs/screenshots/
-```
-
-Recommended screenshots:
-- Pipeline Success
-- Approval Gate
-- Terraform Plan
-- Terraform Apply
-- Ansible Success
-- NGINX Validation
